@@ -1,9 +1,11 @@
-# bytebank_2
+# ByteBank 2
 
-Flutter project designed to follow the steps of Alura Course - Flutter with Web API.
+Flutter project designed to follow the steps of Alura Course - **Flutter with Web API**.
 
 ## Getting Started
 
-This projects uses a local database API to be processed, this is available at https://github.com/alura-cursos/bytebank-api
-
+- Have Flutter installed
+- Download or clone the project
+- Install local database template available at https://github.com/alura-cursos/bytebank-api
+- Run Flutter Project
 
