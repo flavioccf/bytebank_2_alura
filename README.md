@@ -1,6 +1,6 @@
 # ByteBank 2
 
-Flutter project designed to follow the steps of Alura Course - **Flutter with Web API**.
+Flutter project designed to follow the steps of Alura's courses - **Flutter App with Web API** and **Flutter App with Internal Storage**.
 
 ## Getting Started
 
