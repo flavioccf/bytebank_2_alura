@@ -1,6 +1,6 @@
 # bytebank_2
 
-Flutter project designed for Alura Flutter Course with Web API.
+Flutter project designed to follow the steps of Alura Course - Flutter with Web API.
 
 ## Getting Started
 
