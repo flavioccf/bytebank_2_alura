@@ -1,3 +1,4 @@
+import 'package:bytebank_2/components/transaction_auth_dialog.dart';
 import 'package:bytebank_2/http/webclients/transaction_webclient.dart';
 import 'package:bytebank_2/models/contact.dart';
 import 'package:bytebank_2/models/transaction.dart';
@@ -17,6 +18,7 @@ class TransactionForm extends StatefulWidget {
 class _TransactionFormState extends State<TransactionForm> {
   final TextEditingController _valueController = TextEditingController();
   final TransactionWebClient _webClient = TransactionWebClient();
+  GlobalKey _scaffold = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
@@ -24,6 +26,7 @@ class _TransactionFormState extends State<TransactionForm> {
         ModalRoute.of(context).settings.arguments;
 
     return Scaffold(
+      key: _scaffold,
       appBar: AppBar(
         title: Text('New transaction'),
       ),
@@ -69,13 +72,16 @@ class _TransactionFormState extends State<TransactionForm> {
                           double.tryParse(_valueController.text);
                       final transactionCreated =
                           Transaction(value, args.contact);
-                      _webClient
-                          .save(transactionCreated)
-                          .then((newTransaction) {
-                        if (newTransaction != null) {
-                          Navigator.pop(context, newTransaction);
-                        }
-                      });
+                      showDialog(
+                          context: context,
+                          builder: (contextDialog) {
+                            return TransactionAuthDialog(
+                              onConfirm: (String password) {
+                                _save(transactionCreated, password,
+                                    _scaffold.currentContext);
+                              },
+                            );
+                          });
                     },
                   ),
                 ),
@@ -85,5 +91,14 @@ class _TransactionFormState extends State<TransactionForm> {
         ),
       ),
     );
+  }
+
+  Future<void> _save(Transaction transactionCreated, String password,
+      BuildContext context) async {
+    await _webClient.save(transactionCreated, password).then((newTransaction) {
+      if (newTransaction != null) {
+        Navigator.pop(context, newTransaction);
+      }
+    });
   }
 }
