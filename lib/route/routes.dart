@@ -1,4 +1,3 @@
-import 'package:bytebank_2/components/transaction_auth_dialog.dart';
 import 'package:bytebank_2/screens/contact_form.dart';
 import 'package:bytebank_2/screens/contacts_list.dart';
 import 'package:bytebank_2/screens/dashboard.dart';
