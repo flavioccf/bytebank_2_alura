@@ -24,12 +24,12 @@ class Dashboard extends StatelessWidget {
               scrollDirection: Axis.horizontal,
               child: Row(
                 children: [
-                  _FeatureItem(
+                  FeatureItem(
                     name: 'Transfer',
                     icon: Icons.monetization_on,
                     route: '/contacts_list',
                   ),
-                  _FeatureItem(
+                  FeatureItem(
                     name: 'Transaction Feed',
                     icon: Icons.description,
                     route: '/transactions_list',
@@ -44,12 +44,12 @@ class Dashboard extends StatelessWidget {
   }
 }
 
-class _FeatureItem extends StatelessWidget {
+class FeatureItem extends StatelessWidget {
   final String name;
   final IconData icon;
   final String route;
 
-  const _FeatureItem(
+  const FeatureItem(
       {Key key, @required this.name, this.icon, @required this.route})
       : super(key: key);
 
