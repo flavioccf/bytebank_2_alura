@@ -5,14 +5,18 @@ import 'package:bytebank_2/screens/transaction_form.dart';
 import 'package:flutter/material.dart';
 
 class ContactsList extends StatefulWidget {
+  final ContactDao contactDaoTwo;
+  ContactsList({this.contactDaoTwo});
+
   @override
   _ContactsListState createState() => _ContactsListState();
 }
 
 class _ContactsListState extends State<ContactsList> {
-  final ContactDao _dao = ContactDao();
   @override
   Widget build(BuildContext context) {
+    final ContactDao contactDao =
+        (widget.contactDaoTwo == null ? ContactDao() : widget.contactDaoTwo);
     return Scaffold(
       appBar: AppBar(
         title: Text('Transfer'),
@@ -20,7 +24,7 @@ class _ContactsListState extends State<ContactsList> {
       body: FutureBuilder<List<Contact>>(
         initialData: List(),
         future: Future.delayed(Duration(milliseconds: 500))
-            .then((value) => _dao.findAll()),
+            .then((value) => contactDao.findAll()),
         builder: (context, snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.none:

@@ -25,11 +25,13 @@ class Dashboard extends StatelessWidget {
               child: Row(
                 children: [
                   FeatureItem(
+                    key: Key('transfer'),
                     name: 'Transfer',
                     icon: Icons.monetization_on,
                     route: '/contacts_list',
                   ),
                   FeatureItem(
+                    key: Key('transaction_feed'),
                     name: 'Transaction Feed',
                     icon: Icons.description,
                     route: '/transactions_list',

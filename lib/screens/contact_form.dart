@@ -4,6 +4,8 @@ import 'package:bytebank_2/models/contact.dart';
 import 'package:flutter/material.dart';
 
 class ContactForm extends StatefulWidget {
+  final ContactDao contactDaoTwo;
+  const ContactForm({this.contactDaoTwo});
   @override
   _ContactFormState createState() => _ContactFormState();
 }
@@ -18,10 +20,10 @@ class _ContactFormState extends State<ContactForm> {
   final String _labelFieldAccountNumber = 'Account Number';
   final String _hintFieldAccountNumber = 'Your account here';
   final TextInputType _inputTypeFieldAccountNumber = TextInputType.number;
-  final ContactDao _dao = ContactDao();
-
   @override
   Widget build(BuildContext context) {
+    final ContactDao contactDao =
+        (widget.contactDaoTwo == null ? ContactDao() : widget.contactDaoTwo);
     return Scaffold(
       appBar: AppBar(
         title: Text(_contactFormTitle),
@@ -56,9 +58,7 @@ class _ContactFormState extends State<ContactForm> {
                     final int accountNumber =
                         int.tryParse(_controllerAccountNumber.text);
                     final Contact newContact = Contact(name, accountNumber);
-                    _dao
-                        .save(newContact)
-                        .then((id) => Navigator.pop(context, newContact));
+                    _save(contactDao, newContact, context);
                   },
                 ),
               ),
@@ -67,5 +67,11 @@ class _ContactFormState extends State<ContactForm> {
         ),
       ),
     );
+  }
+
+  void _save(
+      ContactDao contactDao, Contact newContact, BuildContext context) async {
+    await contactDao.save(newContact);
+    Navigator.pop(context, newContact);
   }
 }
