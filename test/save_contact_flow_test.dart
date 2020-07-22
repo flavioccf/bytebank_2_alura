@@ -1,9 +1,11 @@
 import 'package:bytebank_2/main.dart';
+import 'package:bytebank_2/models/contact.dart';
 import 'package:bytebank_2/screens/contact_form.dart';
 import 'package:bytebank_2/screens/contacts_list.dart';
 import 'package:bytebank_2/screens/dashboard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/mockito.dart';
 import 'matchers.dart';
 import 'mocks.dart';
 
@@ -23,56 +25,67 @@ void main() {
     });
 
     testWidgets('Should save a contact', (tester) async {
-      await tester.runAsync(() async {
-        final mockContactDao = MockContactDao();
-        await tester.pumpWidget(MaterialApp(
-          initialRoute: '/',
-          routes: {
-            '/': (context) => ContactsList(
-                  contactDaoTwo: mockContactDao,
-                ),
-            '/contact_form': (context) => ContactForm(
-                  contactDaoTwo: mockContactDao,
-                ),
-          },
-        ));
+      final mockContactDao = MockContactDao();
 
-        final fabNewContact =
-            find.widgetWithIcon(FloatingActionButton, Icons.add);
-        expect(fabNewContact, findsOneWidget);
+      await tester.pumpWidget(MaterialApp(
+        initialRoute: '/',
+        routes: {
+          '/': (context) => Dashboard(),
+          '/contacts_list': (context) => ContactsList(
+                contactDao: mockContactDao,
+              ),
+          '/contact_form': (context) => ContactForm(
+                contactDaoTwo: mockContactDao,
+              ),
+        },
+      ));
 
-        await tester.tap(fabNewContact);
-        await tester.pumpAndSettle();
+      final dashboard = find.byType(Dashboard);
+      expect(dashboard, findsOneWidget);
 
-        final contactForm = find.byType(ContactForm);
-        expect(contactForm, findsOneWidget);
+      final transferFeatureItem = find.byWidgetPredicate((widget) =>
+          featureItemMatcher(
+              widget, 'Transfer', Icons.monetization_on, 'transfer'));
+      expect(transferFeatureItem, findsOneWidget);
 
-        final nameTextField = find.byWidgetPredicate((widget) {
-          if (widget is TextField) {
-            return widget.decoration.labelText == 'Full name';
-          }
-          return false;
-        });
-        expect(nameTextField, findsOneWidget);
-        await tester.enterText(nameTextField, 'Flavio');
+      await tester.tap(transferFeatureItem);
+      await tester.pumpAndSettle();
 
-        final accountNumberTextField = find.byWidgetPredicate((widget) {
-          if (widget is TextField) {
-            return widget.decoration.labelText == 'Account Number';
-          }
-          return false;
-        });
-        expect(accountNumberTextField, findsOneWidget);
-        await tester.enterText(accountNumberTextField, '1000');
+      final contactsList = find.byType(ContactsList);
+      expect(contactsList, findsOneWidget);
 
-        final createButton = find.widgetWithText(RaisedButton, 'Create');
-        expect(createButton, findsOneWidget);
-        await tester.tap(createButton);
-        await tester.pump();
+      verify(mockContactDao.findAll()).called(1);
 
-        final contactsListBack = find.byType(ContactsList);
-        expect(contactsListBack, findsOneWidget);
-      });
+      final fabNewContact =
+          find.widgetWithIcon(FloatingActionButton, Icons.add);
+      expect(fabNewContact, findsOneWidget);
+      await tester.tap(fabNewContact);
+      await tester.pumpAndSettle();
+
+      final contactForm = find.byType(ContactForm);
+      expect(contactForm, findsOneWidget);
+
+      final nameTextField = find.byWidgetPredicate(
+          (widget) => textFieldByLabelTextMatcher(widget, 'Full name'));
+      expect(nameTextField, findsOneWidget);
+      await tester.enterText(nameTextField, 'Alex');
+
+      final accountNumberTextField = find.byWidgetPredicate(
+          (widget) => textFieldByLabelTextMatcher(widget, 'Account number'));
+      expect(accountNumberTextField, findsOneWidget);
+      await tester.enterText(accountNumberTextField, '1000');
+
+      final createButton = find.widgetWithText(RaisedButton, 'Create');
+      expect(createButton, findsOneWidget);
+      await tester.tap(createButton);
+      await tester.pumpAndSettle();
+
+      verify(mockContactDao.save(Contact('Alex', 100, id: 1)));
+
+      final contactsListBack = find.byType(ContactsList);
+      expect(contactsListBack, findsOneWidget);
+
+      verify(mockContactDao.findAll());
     });
   });
 }
