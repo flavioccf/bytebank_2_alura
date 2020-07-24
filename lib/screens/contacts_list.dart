@@ -1,13 +1,10 @@
 import 'package:bytebank_2/components/progress.dart';
-import 'package:bytebank_2/dao/contact_dao.dart';
 import 'package:bytebank_2/models/contact.dart';
 import 'package:bytebank_2/screens/transaction_form.dart';
+import 'package:bytebank_2/widgets/app_dependencies.dart';
 import 'package:flutter/material.dart';
 
 class ContactsList extends StatefulWidget {
-  final ContactDao contactDao;
-  ContactsList({this.contactDao});
-
   @override
   _ContactsListState createState() => _ContactsListState();
 }
@@ -15,14 +12,14 @@ class ContactsList extends StatefulWidget {
 class _ContactsListState extends State<ContactsList> {
   @override
   Widget build(BuildContext context) {
+    final dependencies = AppDependencies.of(context);
     return Scaffold(
       appBar: AppBar(
         title: Text('Transfer'),
       ),
       body: FutureBuilder<List<Contact>>(
         initialData: List(),
-        future: Future.delayed(Duration(milliseconds: 500))
-            .then((value) => widget.contactDao.findAll()),
+        future: dependencies.contactDao.findAll(),
         builder: (context, snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.none:
@@ -37,7 +34,7 @@ class _ContactsListState extends State<ContactsList> {
               return ListView.builder(
                 itemBuilder: (context, index) {
                   final Contact contact = contacts[index];
-                  return _ContactItem(
+                  return ContactItem(
                     contact,
                     onClick: () {
                       Navigator.pushNamed(
@@ -74,7 +71,6 @@ class _ContactsListState extends State<ContactsList> {
               setState(() {
                 final snackbar = SnackBar(content: Text(newContact.toString()));
                 Scaffold.of(context).showSnackBar(snackbar);
-                print(newContact);
               });
             });
           },
@@ -84,10 +80,10 @@ class _ContactsListState extends State<ContactsList> {
   }
 }
 
-class _ContactItem extends StatelessWidget {
+class ContactItem extends StatelessWidget {
   final Contact contact;
   final Function onClick;
-  _ContactItem(
+  ContactItem(
     this.contact, {
     @required this.onClick,
   });

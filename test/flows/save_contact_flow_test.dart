@@ -6,14 +6,26 @@ import 'package:bytebank_2/screens/dashboard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'matchers.dart';
-import 'mocks.dart';
+import '../matchers/matchers.dart';
+import '../mocks/mocks.dart';
+import 'actions.dart';
 
 void main() {
-  group('Saving a contact', () {
-    testWidgets('Find transfer icon', (tester) async {
+  MockContactDao mockContactDao;
+  MockTransactionWebClient mockTransactionWebClient;
+
+  setUp(() async {
+    mockContactDao = MockContactDao();
+    mockTransactionWebClient = MockTransactionWebClient();
+  });
+  group('Save Contact Group: ', () {
+    testWidgets('Finding transfer icon', (tester) async {
       await tester.runAsync(() async {
-        await tester.pumpWidget(BytebankApp());
+        await tester.pumpWidget(BytebankApp(
+          contactDao: mockContactDao,
+          transactionWebClient: mockTransactionWebClient,
+        ));
+
         final dashboard = find.byType(Dashboard);
         expect(dashboard, findsOneWidget);
 
@@ -24,31 +36,16 @@ void main() {
       });
     });
 
-    testWidgets('Should save a contact', (tester) async {
-      final mockContactDao = MockContactDao();
-
-      await tester.pumpWidget(MaterialApp(
-        initialRoute: '/',
-        routes: {
-          '/': (context) => Dashboard(),
-          '/contacts_list': (context) => ContactsList(
-                contactDao: mockContactDao,
-              ),
-          '/contact_form': (context) => ContactForm(
-                contactDaoTwo: mockContactDao,
-              ),
-        },
+    testWidgets('Saving a contact', (tester) async {
+      await tester.pumpWidget(BytebankApp(
+        contactDao: mockContactDao,
+        transactionWebClient: mockTransactionWebClient,
       ));
 
       final dashboard = find.byType(Dashboard);
       expect(dashboard, findsOneWidget);
 
-      final transferFeatureItem = find.byWidgetPredicate((widget) =>
-          featureItemMatcher(
-              widget, 'Transfer', Icons.monetization_on, 'transfer'));
-      expect(transferFeatureItem, findsOneWidget);
-
-      await tester.tap(transferFeatureItem);
+      await clickOnTransferFeatureItem(tester);
       await tester.pumpAndSettle();
 
       final contactsList = find.byType(ContactsList);
@@ -68,10 +65,10 @@ void main() {
       final nameTextField = find.byWidgetPredicate(
           (widget) => textFieldByLabelTextMatcher(widget, 'Full name'));
       expect(nameTextField, findsOneWidget);
-      await tester.enterText(nameTextField, 'Alex');
+      await tester.enterText(nameTextField, 'Flavio');
 
       final accountNumberTextField = find.byWidgetPredicate(
-          (widget) => textFieldByLabelTextMatcher(widget, 'Account number'));
+          (widget) => textFieldByLabelTextMatcher(widget, 'Account Number'));
       expect(accountNumberTextField, findsOneWidget);
       await tester.enterText(accountNumberTextField, '1000');
 
@@ -80,12 +77,12 @@ void main() {
       await tester.tap(createButton);
       await tester.pumpAndSettle();
 
-      verify(mockContactDao.save(Contact('Alex', 100, id: 1)));
+      verify(mockContactDao.save(Contact('Flavio', 1000, id: 1))).called(1);
 
       final contactsListBack = find.byType(ContactsList);
       expect(contactsListBack, findsOneWidget);
 
-      verify(mockContactDao.findAll());
+      verify(mockContactDao.findAll()).called(1);
     });
   });
 }

@@ -31,7 +31,6 @@ class _TransactionFormState extends State<TransactionForm> {
   Widget build(BuildContext context) {
     final TransactionFormArguments args =
         ModalRoute.of(context).settings.arguments;
-    print(transactionId);
     return Scaffold(
       key: _scaffold,
       appBar: AppBar(

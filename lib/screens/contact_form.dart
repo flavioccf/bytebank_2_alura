@@ -1,11 +1,10 @@
 import 'package:bytebank_2/components/editor.dart';
 import 'package:bytebank_2/dao/contact_dao.dart';
 import 'package:bytebank_2/models/contact.dart';
+import 'package:bytebank_2/widgets/app_dependencies.dart';
 import 'package:flutter/material.dart';
 
 class ContactForm extends StatefulWidget {
-  final ContactDao contactDaoTwo;
-  const ContactForm({this.contactDaoTwo});
   @override
   _ContactFormState createState() => _ContactFormState();
 }
@@ -22,8 +21,7 @@ class _ContactFormState extends State<ContactForm> {
   final TextInputType _inputTypeFieldAccountNumber = TextInputType.number;
   @override
   Widget build(BuildContext context) {
-    final ContactDao contactDao =
-        (widget.contactDaoTwo == null ? ContactDao() : widget.contactDaoTwo);
+    final dependencies = AppDependencies.of(context);
     return Scaffold(
       appBar: AppBar(
         title: Text(_contactFormTitle),
@@ -57,8 +55,9 @@ class _ContactFormState extends State<ContactForm> {
                     final String name = _controllerFullName.text;
                     final int accountNumber =
                         int.tryParse(_controllerAccountNumber.text);
-                    final Contact newContact = Contact(name, accountNumber);
-                    _save(contactDao, newContact, context);
+                    final Contact newContact =
+                        Contact(name, accountNumber, id: 1);
+                    _save(dependencies.contactDao, newContact, context);
                   },
                 ),
               ),
