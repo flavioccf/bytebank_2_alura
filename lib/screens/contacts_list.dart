@@ -1,3 +1,4 @@
+import 'package:bytebank_2/components/delete_contact_dialog.dart';
 import 'package:bytebank_2/components/progress.dart';
 import 'package:bytebank_2/models/contact.dart';
 import 'package:bytebank_2/screens/transaction_form.dart';
@@ -36,6 +37,14 @@ class _ContactsListState extends State<ContactsList> {
                   final Contact contact = contacts[index];
                   return ContactItem(
                     contact,
+                    showDeleteDialog: () {
+                      showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return DeleteContactDialog(
+                                contact: contact, dependencies: dependencies);
+                          }).then((value) => setState(() => {}));
+                    },
                     onClick: () {
                       Navigator.pushNamed(
                         context,
@@ -83,14 +92,17 @@ class _ContactsListState extends State<ContactsList> {
 class ContactItem extends StatelessWidget {
   final Contact contact;
   final Function onClick;
+  final Function showDeleteDialog;
   ContactItem(
     this.contact, {
     @required this.onClick,
+    @required this.showDeleteDialog,
   });
 
   @override
   Widget build(BuildContext context) {
     var listTile = ListTile(
+      onLongPress: () => showDeleteDialog(),
       onTap: () => onClick(),
       title: Text(
         contact.name,

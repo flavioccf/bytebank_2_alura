@@ -16,6 +16,6 @@ ThemeData appTheme() {
 ThemeData darkTheme() {
   return ThemeData(
     brightness: Brightness.dark,
-    primaryColor: Colors.blueGrey,
+    primaryColor: Colors.green[900],
   );
 }
