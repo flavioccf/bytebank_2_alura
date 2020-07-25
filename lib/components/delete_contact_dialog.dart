@@ -1,15 +1,13 @@
+import 'package:bytebank_2/widgets/app_dependencies.dart';
 import 'package:flutter/material.dart';
 
 import 'package:bytebank_2/models/contact.dart';
-import 'package:bytebank_2/widgets/app_dependencies.dart';
 
 class DeleteContactDialog extends StatefulWidget {
   final Contact contact;
-  final AppDependencies dependencies;
   const DeleteContactDialog({
     Key key,
     @required this.contact,
-    @required this.dependencies,
   }) : super(key: key);
 
   @override
@@ -19,6 +17,7 @@ class DeleteContactDialog extends StatefulWidget {
 class _DeleteContactDialogState extends State<DeleteContactDialog> {
   @override
   Widget build(BuildContext context) {
+    final dependencies = AppDependencies.of(context);
     return AlertDialog(
       title: Text('AlertDialog Title'),
       content: SingleChildScrollView(
@@ -63,9 +62,7 @@ class _DeleteContactDialogState extends State<DeleteContactDialog> {
         RaisedButton(
           child: Text('DELETE'),
           onPressed: () {
-            widget.dependencies.contactDao
-                .delete(widget.contact.id)
-                .then((value) {
+            dependencies.contactDao.delete(widget.contact.id).then((value) {
               Navigator.of(context).pop();
             });
           },

@@ -41,8 +41,7 @@ class _ContactsListState extends State<ContactsList> {
                       showDialog(
                           context: context,
                           builder: (BuildContext context) {
-                            return DeleteContactDialog(
-                                contact: contact, dependencies: dependencies);
+                            return DeleteContactDialog(contact: contact);
                           }).then((value) => setState(() => {}));
                     },
                     onClick: () {
