@@ -37,6 +37,7 @@ void main() {
     });
 
     testWidgets('Saving a contact', (tester) async {
+      final contact = Contact('Flavio', 1000, id: 1);
       await tester.pumpWidget(BytebankApp(
         contactDao: mockContactDao,
         transactionWebClient: mockTransactionWebClient,
@@ -53,31 +54,22 @@ void main() {
 
       verify(mockContactDao.findAll()).called(1);
 
-      final fabNewContact =
-          find.widgetWithIcon(FloatingActionButton, Icons.add);
-      expect(fabNewContact, findsOneWidget);
-      await tester.tap(fabNewContact);
+      await clickOnTheFabNew(tester);
       await tester.pumpAndSettle();
 
       final contactForm = find.byType(ContactForm);
       expect(contactForm, findsOneWidget);
 
-      final nameTextField = find.byWidgetPredicate(
-          (widget) => textFieldByLabelTextMatcher(widget, 'Full name'));
-      expect(nameTextField, findsOneWidget);
-      await tester.enterText(nameTextField, 'Flavio');
+      await fillTextFieldWithTextLabel(tester,
+          labelText: 'Full name', text: contact.name);
 
-      final accountNumberTextField = find.byWidgetPredicate(
-          (widget) => textFieldByLabelTextMatcher(widget, 'Account Number'));
-      expect(accountNumberTextField, findsOneWidget);
-      await tester.enterText(accountNumberTextField, '1000');
+      await fillTextFieldWithTextLabel(tester,
+          labelText: 'Account Number', text: contact.accountNumber.toString());
 
-      final createButton = find.widgetWithText(RaisedButton, 'Create');
-      expect(createButton, findsOneWidget);
-      await tester.tap(createButton);
+      await clickOntheRaisedButtonWithText(tester, 'Create');
       await tester.pumpAndSettle();
 
-      verify(mockContactDao.save(Contact('Flavio', 1000, id: 1))).called(1);
+      verify(mockContactDao.save(contact)).called(1);
 
       final contactsListBack = find.byType(ContactsList);
       expect(contactsListBack, findsOneWidget);
