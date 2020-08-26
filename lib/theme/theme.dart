@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 
 ThemeData appTheme() {
   return ThemeData(
-    primaryColor: Colors.green[900],
-    accentColor: Colors.green[700],
+    backgroundColor: Color(0xff7a297a),
+    primaryColor: Color(0xff993399),
+    accentColor: Color(0xff993399),
     buttonTheme: ButtonThemeData(
-      buttonColor: Colors.green[700],
-      highlightColor: Colors.green[900],
-      splashColor: Colors.green[800],
+      buttonColor: Color(0xff993399),
+      highlightColor: Color(0xff993399),
+      splashColor: Color(0xff993399),
       textTheme: ButtonTextTheme.primary,
     ),
   );
@@ -16,6 +17,6 @@ ThemeData appTheme() {
 ThemeData darkTheme() {
   return ThemeData(
     brightness: Brightness.dark,
-    primaryColor: Colors.green[900],
+    primaryColor: Color(0xff993399),
   );
 }

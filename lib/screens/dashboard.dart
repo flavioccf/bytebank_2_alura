@@ -1,3 +1,4 @@
+import 'package:bytebank_2/theme/theme.dart';
 import 'package:flutter/material.dart';
 
 class Dashboard extends StatelessWidget {
@@ -6,6 +7,7 @@ class Dashboard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: appTheme().backgroundColor,
       appBar: AppBar(
         title: Text('Dashboard'),
       ),
